@@ -1,8 +1,8 @@
 package com.db.dataplatform.techtest;
 
-import com.db.dataplatform.techtest.client.api.model.DataBody;
-import com.db.dataplatform.techtest.client.api.model.DataEnvelope;
-import com.db.dataplatform.techtest.client.api.model.DataHeader;
+import com.db.dataplatform.techtest.common.model.DataBody;
+import com.db.dataplatform.techtest.common.model.DataEnvelope;
+import com.db.dataplatform.techtest.common.model.DataHeader;
 import com.db.dataplatform.techtest.client.component.Client;
 import com.db.dataplatform.techtest.server.persistence.BlockTypeEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;

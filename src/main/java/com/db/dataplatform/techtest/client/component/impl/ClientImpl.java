@@ -1,7 +1,7 @@
 package com.db.dataplatform.techtest.client.component.impl;
 
-import com.db.dataplatform.techtest.client.api.model.DataEnvelope;
 import com.db.dataplatform.techtest.client.component.Client;
+import com.db.dataplatform.techtest.common.model.DataEnvelope;
 import com.db.dataplatform.techtest.common.utils.MD5Checksum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,8 +44,8 @@ public class ClientImpl implements Client {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.add("Content-MD5", MD5Checksum.calculateMD5Checksum(dataEnvelope.getDataBody().getDataBody()));
-            HttpEntity<String> request =
-                    new HttpEntity<>(dataEnvelope.toString(), headers);
+            HttpEntity<DataEnvelope> request =
+                    new HttpEntity<>(dataEnvelope, headers);
 
             ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(URI_PUSHDATA, request, Boolean.class);
 
@@ -62,13 +63,28 @@ public class ClientImpl implements Client {
     @Override
     public List<DataEnvelope> getData(String blockType) {
         log.info("Query for data with header block type {}", blockType);
-        return new ArrayList<>();
+
+        ResponseEntity<DataEnvelope[]> responseEntity =
+                restTemplate.getForEntity(URI_GETDATA.expand(blockType), DataEnvelope[].class);
+
+        if (responseEntity.getBody() != null) {
+            DataEnvelope[] dataEnvelopes = responseEntity.getBody();
+
+            log.info("Query for data returned {} blocks", dataEnvelopes.length);
+            return Arrays.asList(dataEnvelopes);
+        }
+        return Collections.emptyList();
     }
 
     @Override
     public boolean updateData(String blockName, String newBlockType) {
         log.info("Updating blocktype to {} for block with name {}", newBlockType, blockName);
-        return true;
+
+        Boolean isSuccess = restTemplate.patchForObject(URI_PATCHDATA.expand(blockName, newBlockType), null, Boolean.class);
+
+        log.info("Block name {}{} updated to block type {}", blockName, isSuccess ? "" : " not", newBlockType);
+
+        return isSuccess != null ? isSuccess : false;
     }
 
 

@@ -1,6 +1,6 @@
 package com.db.dataplatform.techtest.client.component;
 
-import com.db.dataplatform.techtest.client.api.model.DataEnvelope;
+import com.db.dataplatform.techtest.common.model.DataEnvelope;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.UnsupportedEncodingException;

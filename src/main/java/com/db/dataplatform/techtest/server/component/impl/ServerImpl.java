@@ -1,7 +1,8 @@
 package com.db.dataplatform.techtest.server.component.impl;
 
 import com.db.dataplatform.techtest.common.utils.MD5Checksum;
-import com.db.dataplatform.techtest.server.api.model.DataEnvelope;
+import com.db.dataplatform.techtest.common.model.DataEnvelope;
+import com.db.dataplatform.techtest.server.persistence.BlockTypeEnum;
 import com.db.dataplatform.techtest.server.persistence.model.DataBodyEntity;
 import com.db.dataplatform.techtest.server.persistence.model.DataHeaderEntity;
 import com.db.dataplatform.techtest.server.service.DataBodyService;
@@ -12,6 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,4 +57,26 @@ public class ServerImpl implements Server {
         dataBodyServiceImpl.saveDataBody(dataBodyEntity);
     }
 
+    public List<DataEnvelope> getDataByBlockType(String blocktype) {
+        List<DataBodyEntity> dataBodyEntities = dataBodyServiceImpl.getDataByBlockType(BlockTypeEnum.valueOf(blocktype));
+
+        return dataBodyEntities.stream().map(DataEnvelope::fromDataBodyEntity).collect(Collectors.toList());
+    }
+
+    public boolean updateBlockName(String name, String newBlockType) {
+        Optional<DataBodyEntity> optionalDataBodyEntity = dataBodyServiceImpl.getDataByBlockName(name);
+
+        if (optionalDataBodyEntity.isPresent()) {
+            DataBodyEntity dataBodyEntity = optionalDataBodyEntity.get();
+
+            dataBodyEntity.getDataHeaderEntity().setBlocktype(BlockTypeEnum.valueOf(newBlockType));
+
+            saveData(dataBodyEntity);
+
+            return true;
+        }
+
+
+        return false;
+    }
 }

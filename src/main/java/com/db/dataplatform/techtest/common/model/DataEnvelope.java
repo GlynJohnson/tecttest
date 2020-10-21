@@ -1,4 +1,4 @@
-package com.db.dataplatform.techtest.server.api.model;
+package com.db.dataplatform.techtest.common.model;
 
 import com.db.dataplatform.techtest.server.persistence.model.DataBodyEntity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
