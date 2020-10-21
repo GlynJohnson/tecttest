@@ -1,8 +1,5 @@
-package com.db.dataplatform.techtest.api.model;
+package com.db.dataplatform.techtest.common.model;
 
-import com.db.dataplatform.techtest.server.api.model.DataBody;
-import com.db.dataplatform.techtest.server.api.model.DataEnvelope;
-import com.db.dataplatform.techtest.server.api.model.DataHeader;
 import com.db.dataplatform.techtest.server.persistence.BlockTypeEnum;
 import org.junit.Test;
 import org.junit.runner.RunWith;

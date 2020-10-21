@@ -3,7 +3,7 @@ package com.db.dataplatform.techtest.api.controller;
 import com.db.dataplatform.techtest.TestDataHelper;
 import com.db.dataplatform.techtest.common.utils.MD5Checksum;
 import com.db.dataplatform.techtest.server.api.controller.ServerController;
-import com.db.dataplatform.techtest.server.api.model.DataEnvelope;
+import com.db.dataplatform.techtest.common.model.DataEnvelope;
 import com.db.dataplatform.techtest.server.exception.HadoopClientException;
 import com.db.dataplatform.techtest.server.component.Server;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,7 +1,7 @@
 package com.db.dataplatform.techtest.service;
 
 import com.db.dataplatform.techtest.common.utils.MD5Checksum;
-import com.db.dataplatform.techtest.server.api.model.DataEnvelope;
+import com.db.dataplatform.techtest.common.model.DataEnvelope;
 import com.db.dataplatform.techtest.server.mapper.ServerMapperConfiguration;
 import com.db.dataplatform.techtest.server.persistence.model.DataBodyEntity;
 import com.db.dataplatform.techtest.server.persistence.model.DataHeaderEntity;
