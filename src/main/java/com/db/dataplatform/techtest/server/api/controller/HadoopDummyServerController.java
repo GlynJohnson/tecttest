@@ -25,13 +25,14 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class HadoopDummyServerController {
 
+    private static final Random random = new Random();
+
     private final Server server;
 
     @PostMapping(value = "/pushbigdata")
     public ResponseEntity<HttpStatus> pushBigData(@RequestBody @Valid String payload) throws InterruptedException {
 
         log.info("Saving to Hadoop file system");
-        Random random = new Random();
         int workDuration = random.ints(2000, 4000).findAny().getAsInt();
 
         // Simulate long running work.

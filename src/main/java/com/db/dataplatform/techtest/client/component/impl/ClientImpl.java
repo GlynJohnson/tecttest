@@ -43,7 +43,7 @@ public class ClientImpl implements Client {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.add("Content-MD5", MD5Checksum.calculateMD5Checksum(dataEnvelope.getDataBody().getDataBody()));
+            headers.add("Content-MD5", MD5Checksum.calculateMD5Checksum(dataEnvelope.getDataBody().getBody()));
             HttpEntity<DataEnvelope> request =
                     new HttpEntity<>(dataEnvelope, headers);
 

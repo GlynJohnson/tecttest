@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ServerImpl implements Server {
     @Override
     public boolean saveDataEnvelope(DataEnvelope envelope, String md5Checksum) throws NoSuchAlgorithmException {
         boolean success = false;
-        if (md5Checksum.equals(MD5Checksum.calculateMD5Checksum(envelope.getDataBody().getDataBody()))) {
+        if (md5Checksum.equals(MD5Checksum.calculateMD5Checksum(envelope.getDataBody().getBody()))) {
 
             // Save to persistence.
             persist(envelope);
@@ -63,20 +64,14 @@ public class ServerImpl implements Server {
         return dataBodyEntities.stream().map(DataEnvelope::fromDataBodyEntity).collect(Collectors.toList());
     }
 
+    @Transactional
     public boolean updateBlockName(String name, String newBlockType) {
         Optional<DataBodyEntity> optionalDataBodyEntity = dataBodyServiceImpl.getDataByBlockName(name);
 
-        if (optionalDataBodyEntity.isPresent()) {
-            DataBodyEntity dataBodyEntity = optionalDataBodyEntity.get();
-
-            dataBodyEntity.getDataHeaderEntity().setBlocktype(BlockTypeEnum.valueOf(newBlockType));
-
-            saveData(dataBodyEntity);
-
-            return true;
+        if (optionalDataBodyEntity.isPresent() &&
+                name.equals(optionalDataBodyEntity.get().getDataHeaderEntity().getName())) {
+            return dataBodyServiceImpl.updateBlocktypeByName(name, newBlockType) == 1;
         }
-
-
         return false;
     }
 }

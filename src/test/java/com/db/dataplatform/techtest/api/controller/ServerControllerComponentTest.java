@@ -6,13 +6,16 @@ import com.db.dataplatform.techtest.server.api.controller.ServerController;
 import com.db.dataplatform.techtest.common.model.DataEnvelope;
 import com.db.dataplatform.techtest.server.exception.HadoopClientException;
 import com.db.dataplatform.techtest.server.component.Server;
+import com.db.dataplatform.techtest.server.persistence.BlockTypeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -20,11 +23,15 @@ import org.springframework.web.util.UriTemplate;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.List;
 
+import static com.db.dataplatform.techtest.TestDataHelper.TEST_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -63,7 +70,7 @@ public class ServerControllerComponentTest {
 		String testDataEnvelopeJson = objectMapper.writeValueAsString(testDataEnvelope);
 
 		MvcResult mvcResult = mockMvc.perform(post(URI_PUSHDATA)
-				.header("Content-MD5", MD5Checksum.calculateMD5Checksum(testDataEnvelope.getDataBody().getDataBody()))
+				.header("Content-MD5", MD5Checksum.calculateMD5Checksum(testDataEnvelope.getDataBody().getBody()))
 				.content(testDataEnvelopeJson)
 				.contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
@@ -72,4 +79,39 @@ public class ServerControllerComponentTest {
 		boolean checksumPass = Boolean.parseBoolean(mvcResult.getResponse().getContentAsString());
 		assertThat(checksumPass).isTrue();
 	}
+
+    @Test
+    public void testGetDataGetCallWorksAsExpected() throws Exception {
+        ResponseEntity<List<DataEnvelope>> responseEntity =
+                new ResponseEntity<>(Collections.singletonList(testDataEnvelope), HttpStatus.OK);
+
+        when(serverMock.getDataByBlockType(any())).thenReturn(Collections.singletonList(testDataEnvelope));
+
+        MvcResult mvcResult = mockMvc.perform(get(URI_GETDATA.expand(BlockTypeEnum.BLOCKTYPEA.name()))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = mvcResult.getResponse().getContentAsString();
+        assertThat(content).isNotEmpty();
+    }
+    @Test
+    public void testPatchDataCallWorksAsExpected() throws Exception {
+        ResponseEntity<Boolean> responseEntity =
+                new ResponseEntity<>(true, HttpStatus.OK);
+
+        when(serverMock.updateBlockName(any(), any())).thenReturn(true);
+
+        MvcResult mvcResult = mockMvc.perform(patch(URI_PATCHDATA.expand(TEST_NAME, BlockTypeEnum.BLOCKTYPEB.name()))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = mvcResult.getResponse().getContentAsString();
+        assertThat(content).isNotEmpty();
+    }
+
+
+
+
 }

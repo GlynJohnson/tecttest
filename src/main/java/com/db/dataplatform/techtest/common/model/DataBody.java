@@ -16,6 +16,6 @@ import javax.validation.constraints.NotNull;
 public class DataBody {
 
     @NotNull
-    private String dataBody;
+    private String body;
 
 }

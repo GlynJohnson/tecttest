@@ -48,8 +48,6 @@ public class ServerController {
 
         dataBlocks = server.getDataByBlockType(blockType);
 
-
-
         return new ResponseEntity<>(dataBlocks, HttpStatus.OK);
     }
 

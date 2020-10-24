@@ -16,6 +16,6 @@ public class DataBodyTests {
         DataBody dataBody = new DataBody(DUMMY_DATA);
 
         assertThat(dataBody).isNotNull();
-        assertThat(dataBody.getDataBody()).isEqualTo(DUMMY_DATA);
+        assertThat(dataBody.getBody()).isEqualTo(DUMMY_DATA);
     }
 }

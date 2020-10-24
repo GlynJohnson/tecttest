@@ -38,6 +38,14 @@ public class TestDataHelper {
         return dataEnvelope;
     }
 
+    public static DataEnvelope createTestDataEnvelopeApiObject(String name) {
+        DataBody dataBody = new DataBody(DUMMY_DATA);
+        DataHeader dataHeader = new DataHeader(name, BlockTypeEnum.BLOCKTYPEA);
+
+        DataEnvelope dataEnvelope = new DataEnvelope(dataHeader, dataBody);
+        return dataEnvelope;
+    }
+
     public static DataEnvelope createTestDataEnvelopeApiObjectWithEmptyName() {
         DataBody dataBody = new DataBody(DUMMY_DATA);
         DataHeader dataHeader = new DataHeader(TEST_NAME_EMPTY, BlockTypeEnum.BLOCKTYPEA);
