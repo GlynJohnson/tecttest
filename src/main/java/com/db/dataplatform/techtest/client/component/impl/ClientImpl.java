@@ -49,12 +49,12 @@ public class ClientImpl implements Client {
 
             ResponseEntity<Boolean> responseEntity = restTemplate.postForEntity(URI_PUSHDATA, request, Boolean.class);
 
-            success = responseEntity.getBody() != null ? responseEntity.getBody() : false;
-
+            if (responseEntity.getBody() != null) {
+                success = responseEntity.getBody();
+            }
         } catch (NoSuchAlgorithmException e) {
             log.error("Could not find MD5 checksum algorithm", e);
         }
-
 
         log.info("Data successfully sent: {}", success);
         return success;
@@ -82,7 +82,10 @@ public class ClientImpl implements Client {
 
         Boolean isSuccess = restTemplate.patchForObject(URI_PATCHDATA.expand(blockName, newBlockType), null, Boolean.class);
 
-        return isSuccess != null ? isSuccess : false;
+        if (isSuccess != null) {
+            return isSuccess;
+        }
+        return false;
     }
 
 
