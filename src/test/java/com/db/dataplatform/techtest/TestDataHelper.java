@@ -7,6 +7,7 @@ import com.db.dataplatform.techtest.server.persistence.BlockTypeEnum;
 import com.db.dataplatform.techtest.server.persistence.model.DataBodyEntity;
 import com.db.dataplatform.techtest.server.persistence.model.DataHeaderEntity;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.Instant;
 
 public class TestDataHelper {
@@ -27,6 +28,7 @@ public class TestDataHelper {
         DataBodyEntity dataBodyEntity = new DataBodyEntity();
         dataBodyEntity.setDataHeaderEntity(dataHeaderEntity);
         dataBodyEntity.setDataBody(DUMMY_DATA);
+        dataBodyEntity.setCreatedTimestamp(Instant.now());
         return dataBodyEntity;
     }
 

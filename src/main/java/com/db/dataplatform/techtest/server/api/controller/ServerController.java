@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
@@ -35,8 +36,7 @@ public class ServerController {
 
     public static final String URI_PUSHBIGDATA = "http://localhost:8090/hadoopserver/pushbigdata";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     private final Server server;
 
@@ -50,7 +50,7 @@ public class ServerController {
         log.info("Data envelope persisted. Attribute name: {}", dataEnvelope.getDataHeader().getName());
 
         if (checksumPass) {
-            pushToDataLake(dataEnvelope);
+            boolean success = pushToDataLake(dataEnvelope);
         }
 
         return ResponseEntity.ok(checksumPass);
@@ -82,9 +82,14 @@ public class ServerController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<DataEnvelope> request = new HttpEntity<>(dataEnvelope, headers);
 
-        ResponseEntity<HttpStatus> responseEntity = restTemplate.postForEntity(URI_PUSHBIGDATA, request, HttpStatus.class);
-
-        return responseEntity.getStatusCode().is2xxSuccessful();
+        try {
+            ResponseEntity<HttpStatus> responseEntity = restTemplate.postForEntity(URI_PUSHBIGDATA, request, HttpStatus.class);
+            log.info("Data pushed to Hadoop data lake");
+            return responseEntity.getStatusCode().is2xxSuccessful();
+        } catch (HttpServerErrorException.GatewayTimeout gte) {
+            log.error("Timed out pushing to data lake");
+            return false;
+        }
     }
 
 }

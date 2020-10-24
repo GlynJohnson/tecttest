@@ -30,6 +30,7 @@ import java.util.List;
 import static com.db.dataplatform.techtest.TestDataHelper.TEST_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -57,7 +58,7 @@ public class ServerControllerComponentTest {
 
 	@Before
 	public void setUp() throws HadoopClientException, NoSuchAlgorithmException, IOException {
-		serverController = new ServerController(serverMock);
+		serverController = new ServerController(restTemplateMock, serverMock);
 		mockMvc = standaloneSetup(serverController).build();
 		objectMapper = Jackson2ObjectMapperBuilder
 				.json()
@@ -72,6 +73,9 @@ public class ServerControllerComponentTest {
 	public void testPushDataPostCallWorksAsExpected() throws Exception {
 
 		String testDataEnvelopeJson = objectMapper.writeValueAsString(testDataEnvelope);
+
+		when(restTemplateMock.postForEntity(anyString(), any(), any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
 
 		MvcResult mvcResult = mockMvc.perform(post(URI_PUSHDATA)
 				.header("Content-MD5", MD5Checksum.calculateMD5Checksum(testDataEnvelope.getDataBody().getBody()))
