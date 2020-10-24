@@ -62,15 +62,24 @@ public class ClientImplTest {
 
     @Test
     public void getDataFromServer() {
-        List<DataEnvelope> dataEnvelopes = new ArrayList<>();
+        List<DataEnvelope> dataEnvelopes;
 
         when(restTemplate.getForEntity(any(), any())).thenReturn(generateResponseEntity(HttpStatus.OK));
 
         dataEnvelopes = client.getData("BLOCKTYPEA");
 
-        assertEquals(1,dataEnvelopes.size());
+        assertEquals(1, dataEnvelopes.size());
+    }
 
+    @Test
+    public void getDataReturnsNoData() {
+        List<DataEnvelope> dataEnvelopes;
 
+        when(restTemplate.getForEntity(any(), any())).thenReturn(generateEmptyResponseEntity(HttpStatus.OK));
+
+        dataEnvelopes = client.getData("BLOCKTYPEA");
+
+        assertEquals(0, dataEnvelopes.size());
     }
 
     @Test
@@ -103,6 +112,11 @@ public class ClientImplTest {
         DataEnvelope testDataEnvelope = createTestDataEnvelopeApiObject();
 
         return new ResponseEntity<>(Arrays.array(testDataEnvelope), httpStatus);
+    }
+
+    private ResponseEntity<Object> generateEmptyResponseEntity(HttpStatus httpStatus) {
+
+        return new ResponseEntity<>(httpStatus);
     }
 
 }
