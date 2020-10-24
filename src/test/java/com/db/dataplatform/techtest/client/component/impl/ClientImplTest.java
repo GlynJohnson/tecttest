@@ -25,6 +25,7 @@ import java.util.List;
 
 import static com.db.dataplatform.techtest.TestDataHelper.TEST_NAME;
 import static com.db.dataplatform.techtest.TestDataHelper.createTestDataEnvelopeApiObject;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,7 +68,7 @@ public class ClientImplTest {
 
         dataEnvelopes = client.getData("BLOCKTYPEA");
 
-        assertTrue(dataEnvelopes.size() == 1);
+        assertEquals(1,dataEnvelopes.size());
 
 
     }

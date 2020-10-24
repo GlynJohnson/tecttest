@@ -4,7 +4,6 @@ import com.db.dataplatform.techtest.common.model.DataEnvelope;
 import com.db.dataplatform.techtest.server.component.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,7 +49,7 @@ public class ServerController {
         log.info("Data envelope persisted. Attribute name: {}", dataEnvelope.getDataHeader().getName());
 
         if (checksumPass) {
-            boolean success = pushToDataLake(dataEnvelope);
+            pushToDataLake(dataEnvelope);
         }
 
         return ResponseEntity.ok(checksumPass);

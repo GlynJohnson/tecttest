@@ -1,9 +1,9 @@
 package com.db.dataplatform.techtest;
 
+import com.db.dataplatform.techtest.client.component.Client;
 import com.db.dataplatform.techtest.common.model.DataBody;
 import com.db.dataplatform.techtest.common.model.DataEnvelope;
 import com.db.dataplatform.techtest.common.model.DataHeader;
-import com.db.dataplatform.techtest.client.component.Client;
 import com.db.dataplatform.techtest.server.persistence.BlockTypeEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.retry.annotation.EnableRetry;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import static com.db.dataplatform.techtest.Constant.DUMMY_DATA;
 
@@ -43,12 +42,12 @@ public class TechTestApplication {
 	}
 
 	private void updateData() throws UnsupportedEncodingException {
-		boolean success = client.updateData(HEADER_NAME, BlockTypeEnum.BLOCKTYPEB.name());
+		client.updateData(HEADER_NAME, BlockTypeEnum.BLOCKTYPEB.name());
 	}
 
 	private void queryData() {
 
-		List<DataEnvelope> data = client.getData(BlockTypeEnum.BLOCKTYPEA.name());
+		client.getData(BlockTypeEnum.BLOCKTYPEA.name());
 	}
 
 	private void pushData() throws JsonProcessingException {

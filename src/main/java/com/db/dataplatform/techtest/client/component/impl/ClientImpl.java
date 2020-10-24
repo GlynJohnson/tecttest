@@ -82,8 +82,6 @@ public class ClientImpl implements Client {
 
         Boolean isSuccess = restTemplate.patchForObject(URI_PATCHDATA.expand(blockName, newBlockType), null, Boolean.class);
 
-        log.info("Block name {}{} updated to block type {}", blockName, isSuccess ? "" : " not", newBlockType);
-
         return isSuccess != null ? isSuccess : false;
     }
 
